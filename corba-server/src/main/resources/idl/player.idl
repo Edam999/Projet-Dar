@@ -1,0 +1,8 @@
+module MiniGames {
+    interface PlayerManager {
+        boolean registerPlayer(in string name);
+        string getOnlinePlayers();
+        string requestGame(in string requester, in string opponentName, in string gameType);
+        string getGameServerInfo(in string gameType);
+    };
+};

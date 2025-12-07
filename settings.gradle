@@ -1,1 +1,8 @@
 rootProject.name = 'ProjetDar'
+
+include 'client'
+include 'corba-server'
+include 'game-server'
+include 'main'
+include 'udp-broadcaster'
+include 'webserver'

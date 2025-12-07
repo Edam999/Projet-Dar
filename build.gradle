@@ -1,20 +1,82 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
-group = 'org.example'
+group = 'com.gamehub'
 version = '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // WebSocket
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+
+    // NanoHTTPD pour serveur HTTP/WebSocket
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation 'org.nanohttpd:nanohttpd-websocket:2.3.1'
+
+    // JavaFX pour l'interface graphique (optionnel pour JDK 8)
+    // Décommentez si vous voulez utiliser l'interface JavaFX
+    // compile 'org.openjfx:javafx-controls:8'
+
+    // CORBA est inclus dans JDK 8, pas besoin de dépendances externes
+
+    // Logging
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
 }
 
-test {
-    useJUnitPlatform()
+application {
+    mainClass = 'main.MainGameServer'
 }
+
+// Pour JDK 8, utiliser mainClassName au lieu de mainClass
+mainClassName = 'main.MainGameServer'
+
+tasks.named('run') {
+    standardInput = System.in
+}
+
+// Tâche pour démarrer seulement le serveur CORBA
+task startCorba(type: JavaExec) {
+    main = 'MiniGames.CorbaServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Tâche pour démarrer le serveur WebSocket
+task startWebSocket(type: JavaExec) {
+    main = 'webserver.WebSocketGameBridge'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Tâche pour démarrer le serveur HTTP
+task startWeb(type: JavaExec) {
+    main = 'webserver.WebServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Tâche pour démarrer le serveur UDP
+task startUdp(type: JavaExec) {
+    main = 'udp.UdpBroadcastServer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Tâche pour démarrer le client CORBA (test)
+task startClient(type: JavaExec) {
+    main = 'MiniGames.CorbaClient'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// NOTE: CORBA est inclus dans JDK 8, les fichiers sont créés manuellement
+// Plus besoin de generateCorbaStubs

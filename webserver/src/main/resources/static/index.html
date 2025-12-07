@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Plateforme de Mini-Jeux Multijoueurs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: #22c55e;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            padding: 12px 28px;
+            border-radius: 25px;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 28px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .game-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid rgba(79, 172, 254, 0.5);
+            z-index: 500;
+        }
+
+        .game-container.show {
+            display: block;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .tic-tac-toe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            grid-template-rows: repeat(3, 120px);
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        .cell {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(79, 172, 254, 0.3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cell:hover:not(.occupied) {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: rgba(79, 172, 254, 0.6);
+            transform: scale(1.05);
+        }
+
+        .cell.occupied {
+            cursor: not-allowed;
+        }
+
+        .cell.x {
+            color: #4facfe;
+        }
+
+        .cell.o {
+            color: #f87171;
+        }
+
+        .status-bar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4facfe;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .players-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+
+        .players-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .player-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .player-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .player-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .notifications {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 350px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4facfe;
+            animation: slideInRight 0.5s ease;
+        }
+
+        .notification.success {
+            border-left-color: #22c55e;
+        }
+
+        .notification.error {
+            border-left-color: #ef4444;
+        }
+
+        .logs-section {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 400px;
+            max-height: 300px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .logs-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #4facfe;
+        }
+
+        .log-entry {
+            font-size: 12px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: monospace;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <nav>
+            <div class="logo">🎮 GameHub</div>
+            <div class="connection-status">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Déconnecté</span>
+            </div>
+            <button class="btn-primary" id="connectBtn" onclick="showConnectModal()">
+                Se connecter
+            </button>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container">
+            <div class="status-bar">
+                <div class="stat">
+                    <span class="stat-value" id="playersOnline">0</span>
+                    <span class="stat-label">Joueurs en ligne</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="activeGames">0</span>
+                    <span class="stat-label">Parties actives</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">CORBA</span>
+                    <span class="stat-label" id="corbaStatus">Inactif</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">TCP</span>
+                    <span class="stat-label" id="tcpStatus">Inactif</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="players-section">
+        <div class="container">
+            <h2 class="section-title">Joueurs En Ligne</h2>
+            <div class="players-list" id="playersList">
+                <div style="text-align: center; opacity: 0.5; grid-column: 1/-1;">
+                    Connectez-vous pour voir les joueurs en ligne
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="modal" id="connectModal">
+    <div class="modal-content">
+        <h2>Connexion à GameHub</h2>
+        <div class="form-group">
+            <label>Nom de joueur</label>
+            <input type="text" id="playerName" placeholder="Entrez votre nom" />
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-secondary" onclick="hideConnectModal()">Annuler</button>
+            <button class="btn-primary" onclick="connectToServer()">Connexion</button>
+        </div>
+    </div>
+</div>
+
+<div class="game-container" id="gameContainer">
+    <div class="game-header">
+        <h2>Tic-Tac-Toe</h2>
+        <div class="game-info">
+            <div>Vous: <span id="yourSymbol">-</span></div>
+            <div id="turnIndicator">En attente...</div>
+        </div>
+    </div>
+    <div class="tic-tac-toe-board" id="gameBoard">
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <button class="btn-secondary" onclick="leaveGame()">Quitter la partie</button>
+    </div>
+</div>
+
+<div class="notifications" id="notifications"></div>
+
+<div class="logs-section">
+    <div class="logs-title">📡 Logs de Connexion</div>
+    <div id="logs"></div>
+</div>
+
+<script>
+    let ws = null;
+    let playerName = null;
+    let mySymbol = null;
+    let myTurn = false;
+    let inGame = false;
+
+    function initWebSocket() {
+        ws = new WebSocket("ws://localhost:8081");
+
+        ws.onopen = function() {
+            document.getElementById("statusDot").classList.add("connected");
+            document.getElementById("statusText").innerText = "Connecté au serveur";
+            document.getElementById("tcpStatus").innerText = "Actif";
+            addLog("WebSocket connecté", "success");
+            showNotification("Connexion établie", "Connecté au serveur WebSocket", "success");
+        };
+
+        ws.onmessage = function(event) {
+            console.log("Réponse:", event.data);
+            addLog("← " + event.data, "tcp");
+            handleMessage(event.data);
+        };
+
+        ws.onerror = function(error) {
+            console.error("Erreur WebSocket:", error);
+            addLog("Erreur WebSocket", "error");
+            showNotification("Erreur", "Erreur de connexion WebSocket", "error");
+        };
+
+        ws.onclose = function() {
+            document.getElementById("statusDot").classList.remove("connected");
+            document.getElementById("statusText").innerText = "Déconnecté";
+            document.getElementById("tcpStatus").innerText = "Inactif";
+            addLog("WebSocket déconnecté", "error");
+            showNotification("Déconnexion", "Déconnecté du serveur", "error");
+
+            setTimeout(initWebSocket, 3000);
+        };
+    }
+
+    function handleMessage(message) {
+        const parts = message.split(" ");
+        const command = parts[0];
+
+        switch(command) {
+            case "CONNECTED":
+                break;
+
+            case "REGISTERED":
+                playerName = parts[1];
+                document.getElementById("corbaStatus").innerText = "Actif";
+                hideConnectModal();
+                document.getElementById("connectBtn").textContent = playerName;
+                document.getElementById("connectBtn").onclick = findGame;
+                showNotification("Bienvenue!", "Enregistré en tant que " + playerName, "success");
+                addLog("CORBA: Joueur enregistré", "corba");
+                loadPlayers();
+                break;
+
+            case "PLAYER_COUNT":
+                document.getElementById("playersOnline").textContent = parts[1];
+                break;
+
+            case "PLAYERS_LIST":
+                displayPlayers(parts.slice(1).join(" "));
+                break;
+
+            case "WAITING":
+                showNotification("Recherche...", "En attente d'un adversaire...", "info");
+                break;
+
+            case "START":
+                mySymbol = parts[1];
+                myTurn = (parts[2] === "YES");
+                startGame();
+                break;
+
+            case "MOVE":
+                handleMove(parseInt(parts[1]), parseInt(parts[2]), parts[3]);
+                break;
+
+            case "END":
+                endGame(parts[1]);
+                break;
+
+            case "ERROR":
+                showNotification("Erreur", parts.slice(1).join(" "), "error");
+                break;
+        }
+    }
+
+    function connectToServer() {
+        const name = document.getElementById("playerName").value.trim();
+        if (!name) {
+            showNotification("Erreur", "Veuillez entrer un nom", "error");
+            return;
+        }
+
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            sendMessage("REGISTER " + name);
+        } else {
+            showNotification("Erreur", "WebSocket non connecté", "error");
+        }
+    }
+
+    function findGame() {
+        if (inGame) {
+            showNotification("Erreur", "Vous êtes déjà en partie", "error");
+            return;
+        }
+        sendMessage("FIND_GAME");
+    }
+
+    function startGame() {
+        inGame = true;
+        document.getElementById("gameContainer").classList.add("show");
+        document.getElementById("yourSymbol").textContent = mySymbol;
+
+        const board = document.getElementById("gameBoard");
+        board.innerHTML = "";
+
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.dataset.index = i;
+            cell.onclick = () => handleCellClick(i);
+            board.appendChild(cell);
+        }
+
+        updateTurnIndicator();
+        showNotification("Partie commencée!", "Vous êtes " + mySymbol, "success");
+    }
+
+    function handleCellClick(index) {
+        if (!myTurn || inGame === false) return;
+
+        const cell = document.querySelectorAll('.cell')[index];
+        if (cell.classList.contains('occupied')) return;
+
+        const row = Math.floor(index / 3);
+        const col = index % 3;
+
+        sendMessage("PLAY " + row + " " + col);
+    }
+
+    function handleMove(row, col, symbol) {
+        const index = row * 3 + col;
+        const cell = document.querySelectorAll('.cell')[index];
+        cell.textContent = symbol;
+        cell.classList.add("occupied", symbol.toLowerCase());
+
+        myTurn = (symbol !== mySymbol);
+        updateTurnIndicator();
+    }
+
+    function endGame(result) {
+        inGame = false;
+        let message = "";
+
+        switch(result) {
+            case "WIN":
+                message = "Vous avez gagné! 🎉";
+                break;
+            case "LOSE":
+                message = "Vous avez perdu 😢";
+                break;
+            case "DRAW":
+                message = "Match nul!";
+                break;
+            case "OPPONENT_LEFT":
+                message = "L'adversaire a quitté";
+                break;
+        }
+
+        showNotification("Partie terminée", message, result === "WIN" ? "success" : "info");
+
+        setTimeout(() => {
+            document.getElementById("gameContainer").classList.remove("show");
+        }, 3000);
+    }
+
+    function leaveGame() {
+        if (inGame) {
+            sendMessage("LEAVE_GAME");
+            inGame = false;
+            document.getElementById("gameContainer").classList.remove("show");
+        }
+    }
+
+    function updateTurnIndicator() {
+        const indicator = document.getElementById("turnIndicator");
+        indicator.textContent = myTurn ? "Votre tour!" : "Tour de l'adversaire";
+        indicator.style.color = myTurn ? "#22c55e" : "#f87171";
+    }
+
+    function loadPlayers() {
+        sendMessage("GET_PLAYERS");
+    }
+
+    function displayPlayers(playersStr) {
+        const playersList = document.getElementById("playersList");
+        const players = playersStr ? playersStr.split(",") : [];
+
+        if (players.length === 0 || playersStr === "") {
+            playersList.innerHTML = '<div style="text-align: center; opacity: 0.5; grid-column: 1/-1;">Aucun joueur en ligne</div>';
+            return;
+        }
+
+        playersList.innerHTML = "";
+        players.forEach(player => {
+            if (player.trim()) {
+                const card = document.createElement("div");
+                card.className = "player-card";
+                card.innerHTML = `
+                    <div class="player-avatar">${player.charAt(0).toUpperCase()}</div>
+                    <div>${player}</div>
+                `;
+                playersList.appendChild(card);
+            }
+        });
+    }
+
+    function sendMessage(msg) {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(msg);
+            addLog("→ " + msg, "tcp");
+        }
+    }
+
+    function showConnectModal() {
+        document.getElementById("connectModal").classList.add("show");
+    }
+
+    function hideConnectModal() {
+        document.getElementById("connectModal").classList.remove("show");
+    }
+
+    function showNotification(title, message, type = "info") {
+        const notif = document.createElement("div");
+        notif.className = "notification " + type;
+        notif.innerHTML = `
+            <div class="notification-title">${title}</div>
+            <div class="notification-message">${message}</div>
+        `;
+
+        document.getElementById("notifications").appendChild(notif);
+
+        setTimeout(() => {
+            notif.remove();
+        }, 5000);
+    }
+
+    function addLog(message, type = "info") {
+        const logs = document.getElementById("logs");
+        const entry = document.createElement("div");
+        entry.className = "log-entry " + type;
+        entry.textContent = new Date().toLocaleTimeString() + " - " + message;
+        logs.appendChild(entry);
+        logs.scrollTop = logs.scrollHeight;
+
+        if (logs.children.length > 50) {
+            logs.removeChild(logs.firstChild);
+        }
+    }
+
+    initWebSocket();
+    setInterval(loadPlayers, 10000);
+</script>
+
+</body>
+</html>
