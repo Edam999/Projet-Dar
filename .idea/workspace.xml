@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3e3fa4e2-68da-42d8-8418-2afe02b77691" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/MiniGames/CorbaClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/MiniGames/UDPClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/gameserver/GameClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/gui/GameClientTCP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/gui/TicTacToeGUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/corba-server/src/main/java/MiniGames/CorbaServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/corba-server/src/main/java/MiniGames/PlayerManagerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/corba-server/src/main/resources/idl/PlayerManager.idl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/corba-server/src/main/resources/idl/player.idl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/game-server/src/main/java/gameserver/GameServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/src/main/java/main/MainGamesServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/udp-broadcaster/src/main/java/udp/UdpServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webserver/src/main/java/webserver/MiniGameWebSocket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webserver/src/main/java/webserver/WebServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webserver/src/main/java/webserver/WebSocketBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webserver/src/main/java/webserver/WebSocketServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webserver/src/main/resources/static/index.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="366vQjdClKFRlcB81D0U25Fln0i" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.ProjetDar:corba-server [:corba-server:MiniGames.CorbaServer.main()].executor": "Run",
+    "Gradle.ProjetDar:main [:main:main.MainGameServer.main()].executor": "Run",
+    "Gradle.ProjetDar:udp-broadcaster [:udp-broadcaster:udp.UdpServer.main()].executor": "Run",
+    "Gradle.ProjetDar:webserver [:webserver:webserver.WebSocketBridge.main()].executor": "Run",
+    "Gradle.ProjetDar:webserver [:webserver:webserver.WebSocketServer.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/edamw/IdeaProjects/ProjetDar",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3e3fa4e2-68da-42d8-8418-2afe02b77691" name="Changes" comment="" />
+      <created>1764339822119</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764339822119</updated>
+    </task>
+    <servers />
+  </component>
+</project>
